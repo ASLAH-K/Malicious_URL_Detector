@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>URL Classification System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            background-color: #f0f2f5;
+            color: #1a1a1a;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .url-form {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e1e1e1;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .submit-btn {
+            background-color: #3498db;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .result-container {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .result-header {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f0f2f5;
+        }
+
+        .result-item {
+            margin-bottom: 1rem;
+            padding: 0.5rem 0;
+        }
+
+        .result-label {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .benign {
+            color: #27ae60;
+            font-weight: 700;
+        }
+
+        .malicious {
+            color: #e74c3c;
+            font-weight: 700;
+        }
+
+        .risk-score {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .low-risk {
+            background-color: #dff0d8;
+            color: #27ae60;
+        }
+
+        .medium-risk {
+            background-color: #fcf8e3;
+            color: #f39c12;
+        }
+
+        .high-risk {
+            background-color: #f2dede;
+            color: #e74c3c;
+        }
+
+        .url-display {
+            word-break: break-all;
+            padding: 0.5rem;
+            background: #f8f9fa;
+            border-radius: 5px;
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>URL Classification System</h1>
+            <p>Analyze URLs for potential security threats</p>
+        </div>
+
+        <div class="url-form">
+            <form method="POST">
+                <div class="form-group">
+                    <label for="url">Enter URL to Analyze:</label>
+                    <input type="text" id="url" name="url" required 
+                           placeholder="https://example.com"
+                           value="{{ url if url }}">
+                </div>
+                <button type="submit" class="submit-btn">Analyze URL</button>
+            </form>
+        </div>
+
+        {% if result %}
+        <div class="result-container">
+            <h2 class="result-header">Analysis Results</h2>
+            
+            <div class="result-item">
+                <span class="result-label">Analyzed URL:</span>
+                <div class="url-display">{{ url }}</div>
+            </div>
+
+            <div class="result-item">
+                <span class="result-label">Classification:</span>
+                <span class="{{ 'benign' if result.prediction == 'Benign' else 'malicious' }}">
+                    {{ result.prediction }}
+                </span>
+            </div>
+
+            <div class="result-item">
+                <h3 class="result-label">Risk Assessment:</h3>
+                <div style="margin-top: 0.5rem;">
+                    <p>
+                        <span class="result-label">Probability Score:</span>
+                        <span class="risk-score {{ 'low-risk' if result.prob_risk_category == 'Low Risk' else 'medium-risk' if result.prob_risk_category == 'Medium Risk' else 'high-risk' }}">
+                            {{ result.probability }} ({{ result.prob_risk_category }})
+                        </span>
+                    </p>
+                    <p style="margin-top: 0.5rem;">
+                        <span class="result-label">Custom Risk Score:</span>
+                        <span class="risk-score {{ 'low-risk' if result.custom_risk_category == 'Low Risk' else 'medium-risk' if result.custom_risk_category == 'Medium Risk' else 'high-risk' }}">
+                            {{ result.custom_score }} ({{ result.custom_risk_category }})
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html> 
