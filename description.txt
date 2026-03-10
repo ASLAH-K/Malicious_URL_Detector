@@ -1,0 +1,1 @@
+AI-Driven Malicious URL Detection and Risk Scoring System - A machine learning web application using Random Forest and lexical features for classifying URLs as malicious or benign.
