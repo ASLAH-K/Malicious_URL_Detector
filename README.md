@@ -22,16 +22,6 @@ To answer that, I trained a **Random Forest** model using lexical URL features a
 
 ---
 
-## 📸 Screenshots
-
-> *(Screenshots will be added here.)*
-
-* Home page
-* Prediction result (Malicious)
-* Prediction result (Benign)
-
----
-
 ## 💡 Why I Built This
 
 Most malicious URL detection systems depend on external services such as DNS lookups, WHOIS records, or threat intelligence feeds.
